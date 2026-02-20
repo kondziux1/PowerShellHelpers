@@ -115,6 +115,13 @@ if ($KeepRemainder -and $hasRemainder -and $fullChunks -gt 0) {
 # --- 3. Pathing ---
 $FullOutputPath = [System.IO.Path]::GetFullPath($OutputPattern)
 $OutputDir = Split-Path $FullOutputPath -Parent
+
+# Check if the folder exists; if not, create it
+if (-not (Test-Path $OutputDir)) {
+    Write-Status ">>> Folder missing. Creating directory: $OutputDir" -Color Yellow
+    New-Item -ItemType Directory -Path $OutputDir -Force | Out-Null
+}
+
 $EncodedPath = [uri]::EscapeUriString("file:///$($OutputDir.Replace('\', '/'))")
 
 # --- 4. Processing ---
